@@ -1,5 +1,5 @@
 
-
+const {alert} = require('node-popup')
 const AWS = require('aws-sdk')
 
 const fetch = require("node-fetch");
@@ -40,7 +40,7 @@ module.exports.return_item_get = async (req, res) => {
   let phones_set = new Set();
   transections.forEach(transection=>phones_set.add(transection.phone))
   phones_set = Array.from(phones_set)
-  console.log(phones_set)
+  
   res.render("rentals/return_item", {phones: phones_set});
 };
 
@@ -133,5 +133,6 @@ const checkCustomer = (phone)=>{
 module.exports.rental_details_get = (req, res)=>{
   const phone = req.query.phone
   Tool_transection.find({phone}).then(transections=>res.send(transections)).catch(err=>res.send(err))
+  
   
 }
