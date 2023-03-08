@@ -1,0 +1,49 @@
+<head>
+  <title>List Customers</title>
+</head>
+<%- include('../partials/header') -%>
+<style>
+ 
+  </style>
+
+<script>
+  function click(){
+    console.log('data is'+this)
+
+  }
+</script>
+<body>
+  <a href="/home/accounts"
+    ><p><i class="arrow left"></i></p>
+  </a>
+  <br />
+  <table id="customers">
+    <tr>
+      <th>Name</th>
+      <th>Address</th>
+      <th>Phone</th>
+      <th>Last updated</th>
+      <th>Balance</th>
+    </tr>
+    
+  <% for(let i = 0;i<customers.length;i++){ %>
+    
+    <tr onclick="window.location='/home/accounts/customer?phone=<%= customers[i].phone %>' ">
+      
+    <td><%= customers[i]['name'] %></td>
+    <td><%= customers[i]['address'] %></td>
+    <td class="phone" > <%= customers[i]['phone'] %></td>
+    <td><%= customers[i]['lastUpdated'].toLocaleString() %></td>
+    <td><%= customers[i]['balance'] %></td>
+  
+  </tr>
+
+
+  <% } %> 
+</table>
+
+</body>
+
+
+
+<%- include('../partials/footer') -%>

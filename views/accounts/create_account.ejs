@@ -1,0 +1,65 @@
+<head>
+  <title>Create account</title>
+</head>
+<%- include('../partials/header') -%>
+
+<form action="">
+  <a href="/home/accounts"
+    ><p><i class="arrow left"></i></p>
+  </a>
+  <br />
+  <h2>Create account</h2>
+  <label for="name">Name</label>
+  <input type="text" name="name" required />
+
+  <label for="address">Address</label>
+  <input type="text" name="address" required />
+
+  <label for="phone">Phone</label>
+  <input type="text" name="phone" required />
+
+  <label for="remarks">Note/Remarks</label>
+  <input type="text" name="remarks"/>
+
+  <button>Submit</button>
+
+  <div class="error"></div>
+  <div class="success"></div>
+</form>
+
+<script>
+  const form = document.querySelector("form");
+  const error = document.querySelector(".error");
+  const success = document.querySelector(".success");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    error.textContent = "";
+
+    const name = form.name.value;
+    const address = form.address.value;
+    const phone = form.phone.value;
+    const remarks = form.remarks.value;
+
+    try {
+      const res = await fetch("/create_account", {
+        method: "POST",
+        body: JSON.stringify({ name, address, phone, remarks }),
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await res.json();
+      if (data.error) {
+        error.textContent = data.error;
+      }
+
+      if (data._id) {
+        form.reset();
+        success.textContent = "Customer created successfully!!";
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  });
+</script>
+
+<%- include('../partials/footer') -%>

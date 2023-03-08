@@ -1,0 +1,112 @@
+<head>
+    <title>Pay debit</title>
+  </head>
+  
+<%- include('../partials/header') -%>
+
+
+
+<form >
+    <a href="/home/accounts"
+    ><p><i class="arrow left"></i></p>
+  </a>
+  <br />
+    <h2>Pay debit</h2>
+  <label for="phones">Select the customer</label>
+  <input class="classic" list="phone" name="phone" id="phone_selected" onchange="update_customer_name_and_balance()"/>
+
+  <div class="cust_name"></div>
+
+  <label for="phones">Amount to pay</label>
+  <input class="classic" type="number" name="amount_pay" id="amount_pay"/>
+  
+  <label for="date">Date</label>
+  <input class="classic" type="datetime-local" id="date" name="date">
+
+
+  <label for="remarks">Remarks</label>
+  <input class="classic" type="text" name="remarks" id="remarks"/>
+
+  <button>Submit</button>
+  <div class="error"></div>
+  <div class="success"></div>
+</form>
+
+<datalist id="phone" >
+    <% for(var i = 0; i<customers.length; i++) {%> 
+      <option value = <%= customers[i].phone %> >
+    <% } %>
+</datalist>
+
+<script>
+
+
+
+    const form = document.querySelector('form');
+    const error = document.querySelector('.error')
+    const success = document.querySelector('.success')
+    const cust_name = document.querySelector('.cust_name')
+    form.addEventListener('submit', async (e)=>{
+        e.preventDefault()
+        const phone = document.querySelector('#phone_selected').value
+        const amount_paid = document.querySelector('#amount_pay').value
+        const date_time = document.querySelector('#date').value
+        const remarks = document.querySelector('#remarks').value
+        try{
+            let payment = await fetch("/accounts/payment",{
+                method:'POST',
+                body: JSON.stringify( {phone, amount_paid,date_time, remarks}),
+                headers:{'Content-Type' : 'application/json'}
+            })
+            payment = await payment.json()
+            if(payment.error)
+                console.log(payment.error)
+            else{
+                form.reset()
+                dateReset()
+                cust_name.textContent = ''
+                success.textContent = "Payment is successful!!"
+            }
+                
+        }catch(err){
+            error.textContent = err
+        }
+    })
+
+
+</script>
+
+<script>
+    function update_customer_name_and_balance(data){
+    const phone = document.querySelector('#phone_selected')
+    const cust_name = document.querySelector('.cust_name')
+    cust_name.innerHTML = '<div class = "error">Customer not found!</div>'
+    // console.log(cust_name.value)
+    let customers = '<%- JSON.stringify( customers)%>'
+    customers = JSON.parse(customers)
+    customers.forEach(element => {
+      if(phone.value===element.phone)
+        cust_name.innerHTML = 'Customer name: '+element.name+'<br>Balance: '+element.balance
+    });
+  }
+
+
+  window.addEventListener("load", function() {
+    var now = new Date();
+    var offset = now.getTimezoneOffset() * 60000;
+    var adjustedDate = new Date(now.getTime() - offset);
+    var formattedDate = adjustedDate.toISOString().substring(0,16); // For minute precision
+    var datetimeField = document.getElementById("date");
+    datetimeField.value = formattedDate;
+});
+const dateReset = ()=>{
+  var now = new Date();
+    var offset = now.getTimezoneOffset() * 60000;
+    var adjustedDate = new Date(now.getTime() - offset);
+    var formattedDate = adjustedDate.toISOString().substring(0,16); // For minute precision
+    var datetimeField = document.getElementById("date");
+    datetimeField.value = formattedDate;
+}
+</script>
+
+<%- include('../partials/footer') -%>

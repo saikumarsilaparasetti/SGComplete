@@ -1,0 +1,64 @@
+
+
+<%- include('../partials/header'); -%>
+
+<head>
+  
+<style>
+  #camara{
+    width: 200px;
+    height: 200px;
+    border: 1px solid black;
+  }
+</style>
+</head>
+<body>
+  <form action="">
+    <h2>New Issue</h2>
+    <h3>Select machine</h3>
+    <select class="classic">
+      <% for(var i = 0; i<tools.length; i++) {%> 
+        <option value=<%= i%>><%= tools[i] %></option>  
+
+        <% } %>
+    </select>
+    
+  
+
+    <div id="camera"></div>
+    <input type=button value="Take Snapshot" onClick="take_snapshot()">
+    
+    <div id="results"></div>
+  </form>
+  
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js" integrity="sha512-dQIiHSl2hr3NWKKLycPndtpbh5iaHLo6MwrXm7F0FM5e+kL2U16oE9uIwPHUl6fQBeCthiEuV/rzP3MiAB8Vfw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+ 
+Webcam.set({
+  width: 300,
+  height: 200,
+  image_format: 'jpeg',
+  jpeg_quality: 90
+
+})   
+
+
+
+Webcam.attach('#camera')
+   function take_snapshot(){
+    Webcam.snap( function(data_uri) {
+          // display results in page
+          // document.getElementById('results').innerHTML =
+          //     '<img src="'+data_uri+'"/>';
+              console.log(data_uri)
+            Webcam.freeze();
+
+        });
+        
+   }
+</script>
+<%- include('../partials/footer') -%>
+
+

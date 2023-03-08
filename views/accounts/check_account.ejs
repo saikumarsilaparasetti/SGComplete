@@ -1,0 +1,54 @@
+<head>
+    <title>Check accounts</title>
+  </head>
+<%- include('../partials/header') -%>
+
+
+<form >
+    <a href="/home/accounts"
+    ><p><i class="arrow left"></i></p>
+  </a>
+  <br />
+    <h2>Check account</h2>
+  <label for="phones">Select the customer</label>
+  <input class="classic" list="phone" name="phone"/>
+  <button>Submit</button>
+  <div class="error"></div>
+</form>
+
+<datalist id="phone" >
+    <% for(var i = 0; i<customers.length; i++) {%> 
+      <option value = <%= customers[i].phone %> >
+    <% } %>
+</datalist>
+
+<script>
+    const form = document.querySelector('form');
+    const error = document.querySelector('.error')
+    
+    form.addEventListener('submit', async (e)=>{
+        e.preventDefault()
+        try{
+            
+            if(!checkCustomer())
+                error.textContent = "Plese select a valid customer"
+            else
+                location.assign('/home/accounts/customer?phone='+form.phone.value)
+        }catch(err){
+
+        }
+    })
+
+    const checkCustomer = ()=>{
+        let customers = '<%- JSON.stringify(customers) %>'
+        customers = JSON.parse(customers)
+        // console.log(customers)
+        const form = document.querySelector('form');
+        for(var i = 0;i<customers.length;i++){
+            // console.log(customers[i])
+            if(customers[i].phone === form.phone.value)return true;}
+        return false;
+    }
+</script>
+
+<%- include('../partials/footer') -%>

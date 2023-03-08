@@ -1,0 +1,1 @@
+Web application to maintain accounts of a general store developed for SG general stores and developed using Nodejs.

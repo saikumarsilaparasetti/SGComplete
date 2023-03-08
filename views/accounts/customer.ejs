@@ -1,0 +1,84 @@
+<head>
+  <title>Customer</title>
+</head>
+
+<%- include('../partials/header') %>
+
+
+<body>
+  <form>
+    <a href="/home/accounts/check_account"
+    ><p><i class="arrow left"></i></p>
+  </a>
+  <br />
+  <h3>Customer Details</h3>
+  <table id="customers">
+    <tr><td><h3> Name:</h3></td> <td> <h3><%= customer[0]['name'] %></h3></td></tr>
+    <tr><td><h3> Address:</h3></td> <td><h3> <%= customer[0]['address'] %></h3></td></tr>
+    <tr><td><h3>Phone:</h3></td> <td><h3><%= customer[0]['phone'] %></h3></td></tr>
+    <tr><td><h3>Balance:</h3></td> <td><h3><%= customer[0]['balance'] %></h3></td></tr>
+    <tr><td><h3>Last updated:</h3></td> <td><h3><%= customer[0]['lastUpdated'].toLocaleString() %></h3></td></tr>
+    
+
+  </table>
+    <button>Check transections</button>
+  </form>
+
+  <div class="tableData"></div>
+  <% addTable = function(data){ %>
+  <table>
+    <tr>
+        <th>Item name</th>
+        <th>Time</th>
+        <th>Amount</th>
+        <th>Remarks</th>
+    </tr>
+    <% for(let i = 0;i<data.length;i++){ %>
+        <tr>
+            <td><%= data[i].item_name %></td>
+            <td><%= data[i].time %></td>
+            <td><%= data[i].amount %></td>
+            <td><%= data[i].remarks %></td>
+        </tr>
+
+        <% } %>
+  </table>
+  <br><br>
+
+  <% } %>
+
+
+</body>
+
+
+<script>
+  console.log(window.location.pathname)
+    let data = []
+    let tableData = document.querySelector('.tableData')
+  const form = document.querySelector("form");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const phone = "<%- customer[0].phone %>";
+    try {
+      const transections = await fetch("/home/accounts/transections?phone=" + phone, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      data = await transections.json();
+    var tem = '<br/><table id = "customers"><tr><th>Item name</th><th>Amount</th><th>Date</th><th>Remarks</th></tr>'
+      //   document.write('')
+
+      for(let i = 0;i<data.length;i++){
+        const time = new Date(data[i].time).toLocaleString('en-IN')
+        // const time = getFormettedDate(data[i].time)
+        tem+=('<tr><td>'+data[i].item_name+'</td><td>'+data[i].amount.$numberDecimal+'</td><td>'+time+'</td><td>'+data[i].remarks+'</td></tr>')
+      }
+      tem+='</table><br><br>'
+      tableData.innerHTML = tem;
+    } catch (err) {}
+  });
+
+</script>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,136 @@
+<head>
+  <title>Inventory</title>
+</head>
+
+<%- include('../partials/header') %>
+
+<script>
+  const listInventory = async () => {
+    const inventoryList = document.querySelector(".result");
+
+    let inventory_list = ' <%- JSON.stringify( inventory) %> ';
+    inventory_list = JSON.parse(inventory_list);
+
+    let result = '<br><h2>Inventory available</h2><br><table id="customers">';
+    result +=
+      "<tr><th>Item Name</th><th>Quantity at SGG</th><th>Quantity at SGE</th><th>Last updated</th></tr>";
+    for (let i = 0; i < inventory_list.length; i++) {
+      result += "<tr><td>";
+      result += inventory_list[i].item_name + "</td>";
+      result += "<td>" + inventory_list[i].quantity_at_SGG + "</td>";
+      result += "<td>" + inventory_list[i].quantity_at_SGE + "</td>";
+      result +=
+        "<td>" +new Date( inventory_list[i].last_updated).toLocaleString('en-IN') + "</td>";
+      result += "</tr>";
+    }
+    result += "</table>";
+    inventoryList.innerHTML = result;
+  };
+  function addInventory() {
+      const result = document.querySelector('.result');
+      
+      let result_html = `<form class='update_inventory' ><br><h2>Add/Update Inventory</h2><br><h3>Select an item</h3>
+      <input class="classic" list="inventory" onchange='update_click(this)' id='inventory_input' name="Inventory"/>
+  <br><br><h3>Quantity at SGG</h3>
+  <input type = "number" id='sgg_quant' >
+  <br><br><h3>Quantity at SGE</h3>
+  <input type = "number" id='sge_quant'>
+
+  <button type='button' onclick='submit_update()'>Update</button>
+  <div class='success'/>
+  <div class='error'/>
+  </form>
+  `;
+      
+  
+    let inventory_list = ' <%- JSON.stringify( inventory) %> ';
+    inventory_list = JSON.parse(inventory_list);
+
+    result_html+='<datalist id="inventory" >'
+  
+      for(var i = 0;i<inventory_list.length;i++){
+        
+       result_html+= '<option value ='+inventory_list[i].item_name.replace(' ','_')+' >'
+      }
+      result_html+='</datalist>'
+      result.innerHTML = result_html;
+      
+    }
+
+    async function submit_update(){
+      const item_name = document.querySelector('#inventory_input');
+      const sge_quant = document.querySelector('#sge_quant');
+      const sgg_quant = document.querySelector('#sgg_quant');
+      const success = document.querySelector('.success')
+      const error = document.querySelector('.error')
+
+      if(item_name.value.length==0 || item_name.value==''){
+        error.textContent = "Please provide item name!!"
+        return
+      }
+      try {
+      const res = await fetch("/inventory", {
+        method: "POST",
+        body: JSON.stringify({ item_name:item_name.value,
+          quantity_at_SGG: sgg_quant.value,
+          quantity_at_SGE: sge_quant.value
+        }),
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await res.json();
+      
+      if (data._id) {
+        success.textContent='Inventory updated!'
+        item_name.value='';
+        sge_quant.value=''
+        sgg_quant.value=''
+      }else
+        success.textContent=data
+    } catch (err) {
+      console.log(err);
+    }
+    setTimeout(location.assign('/inventory'), 50000)
+    
+      
+      
+    }
+function update_click(opt){
+  
+  let selectedItem = opt.value
+  let inventory_list = ' <%- JSON.stringify( inventory) %> ';
+    inventory_list = JSON.parse(inventory_list)
+  inventory_list.forEach(element => {
+    
+    if (element.item_name=== selectedItem){
+      
+      document.querySelector('#sge_quant').value=element.quantity_at_SGE;
+      document.querySelector('#sgg_quant').value=element.quantity_at_SGG;
+    }
+  });
+  
+  if(document.querySelector('#sgg_quant').value.length==0 )
+      document.querySelector('#sgg_quant').value=0;
+    
+    if(document.querySelector('#sge_quant').value.length==0 )
+  document.querySelector('#sge_quant').value=0;
+
+}
+</script>
+
+<form>
+  <h2>Inventory</h2>
+  <button class="main" onclick="return listInventory()" type="button">
+    List Inventory
+  </button>
+  <button class="main" onclick="return addInventory()" type="button">Add/Update Inventory</button>
+</form>
+
+<div class="result"></div>
+
+<datalist id="inventory" >
+  <% for(var i = 0; i<inventory.length; i++) {%> 
+    <option value = <%- inventory[i].item_name %> >
+  <% } %>
+</datalist>
+
+<%- include('../partials/footer') %>

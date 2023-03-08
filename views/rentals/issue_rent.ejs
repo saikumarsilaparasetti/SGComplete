@@ -1,0 +1,174 @@
+<head>
+  <title>Issue item</title>
+</head>
+
+<%- include('../partials/header'); -%>
+
+  <head>
+    <title>Rent issue</title>
+  </head>
+  <body>
+    <form action="">
+
+      <h2>New Issue</h2>
+
+      <label for="name"><h3>Customer name</h3></label>
+      <input type="text" name="name" id="name">
+
+      <label for="phone" ><h3> Phone</h3></label>
+      <input type="text" name="phone" id="phone">
+
+      <label for="address"><h3> Address</h3></label>
+      <input type="text" name="address" id="address">
+
+      <label for=""><h3> Select machine</h3></label>
+      <select class="classic" id="tool">
+        <% for(var i = 0; i<tools.length; i++) {%> 
+          <option value=<%= i%>><%= tools[i].tool %></option>  
+
+          <% } %>
+      </select>
+      <br>
+      <label for="click"> <h3>Capture customer picture</h3> </label>
+<button id="start-camera" name="click" type="button" onclick="onCamera()" >Start Camera</button>
+
+<div style="padding-top: 5px;" class="output"></div>
+
+
+<label for="date"><h3> Date</h3></label>
+<input class="classic" type="datetime-local" id="date" name="date">
+
+<label for="remarks"><h3> Remarks</h3></label>
+<input class="classic" type="text" id="remarks" name="remarks">
+
+<button >Submit</button>
+<div class="success"></div>
+<div class="error"></div>
+
+    </form>
+    <br><br>
+  </body>
+</html>
+
+<%- include('../partials/footer') -%>
+
+<script>
+  let form = document.querySelector('form')
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    console.log('submitted')
+    let canvas = document.querySelector("#canvas");
+    let image_data_url = ''
+    if(canvas != null){
+      image_data_url = canvas.toDataURL('image/jpeg');
+    }
+    
+    // console.log(image_data_url)
+    let customer_name = document.querySelector('#name').value
+    let phone = document.querySelector('#phone').value
+    let address = document.querySelector('#address').value
+    let tool = document.querySelector('#tool').value
+    let remarks = document.querySelector('#remarks').value
+    let date = document.querySelector('#date').value
+    let success = document.querySelector('.success')
+    let error = document.querySelector('.error')
+    let output = document.querySelector('.output')
+    await fetch('/rentals/rent_issue',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({customer_name, phone,date, address, tool,pic_url:image_data_url, remarks})
+    }).then(res=>res.json()).then(res=>{success.textContent='Transection successful!\nId: '+res._id;
+      form.reset()
+      dateReset();
+      output.innerHTML=''
+    }).catch(err=>error.innerHTML = err)
+
+  })
+</script>
+
+<script>
+  let camera_button = document.querySelector("#start-camera");
+  
+  let click_button = document.querySelector("#click-photo");
+  
+  let output = document.querySelector('.output')
+  async function open_camera(){
+    let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    video.srcObject = stream;
+  }
+  
+  async function onCamera(){
+    output.innerHTML=`<video id="video" width="320" height="240" autoplay></video>
+    <button id="click-photo" onclick="click_photo()" type="button">Click Photo</button>`
+    let video = document.querySelector("#video");
+    let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    video.srcObject = stream;   
+  
+  }
+  
+  async function click_photo(){
+    let video = document.querySelector("#video");
+    var videoEl = document.getElementById('video');
+  // now get the steam 
+  stream = videoEl.srcObject;
+  // now get all tracks
+  tracks = stream.getTracks();
+  // now close each track by having forEach loop
+  tracks.forEach(function(track) {
+     // stopping every track
+     track.stop();
+  });
+  
+    video.pause()
+    output.innerHTML=`<canvas id="canvas" width="320" height="240"></canvas>`
+    let canvas = document.querySelector("#canvas");
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+       let image_data_url = canvas.toDataURL('image/jpeg');
+       
+       // data url of the image
+      //  console.log(image_data_url);  
+    
+  
+  // assign null to srcObject of video
+  // videoEl.srcObject = null;
+  }
+  
+  // camera_button.addEventListener('click', async function( event) {
+  //   event.preventDefault();
+   
+  // });
+  
+  // click_button.addEventListener('click', async function( event) {
+  //   event.preventDefault();
+    
+  
+  // });
+  
+  function stopVideoOnly(stream) {
+      stream.getTracks().forEach(function(track) {
+          if (track.readyState == 'live' && track.kind === 'video') {
+              track.stop();
+          }
+      });
+  }
+  
+  
+  window.addEventListener("load", function() {
+      var now = new Date();
+      var offset = now.getTimezoneOffset() * 60000;
+      var adjustedDate = new Date(now.getTime() - offset);
+      var formattedDate = adjustedDate.toISOString().substring(0,16); // For minute precision
+      var datetimeField = document.getElementById("date");
+      datetimeField.value = formattedDate;
+  });
+  const dateReset = ()=>{
+    var now = new Date();
+      var offset = now.getTimezoneOffset() * 60000;
+      var adjustedDate = new Date(now.getTime() - offset);
+      var formattedDate = adjustedDate.toISOString().substring(0,16); // For minute precision
+      var datetimeField = document.getElementById("date");
+      datetimeField.value = formattedDate;
+  }
+  </script>
+
+

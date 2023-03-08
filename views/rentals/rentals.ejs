@@ -1,0 +1,31 @@
+<head>
+  <title>Rentals</title>
+</head>
+
+<style>
+  .container {
+    height: 200px;
+    position: relative;
+  }
+
+  .center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+</style>
+
+<%- include('../partials/header') -%>
+
+<form>
+  <h2>Rentals</h2>
+
+  <button class="main"><a href="/home/rentals/issue">New Issue</a></button>
+  <button class="main"><a href="/home/rentals/return_item">Return Item</a></button>
+  <button class="main"><a href="/home/rentals/register_tool">Register tool</a></button>
+</form>
+
+<%- include('../partials/footer') -%>

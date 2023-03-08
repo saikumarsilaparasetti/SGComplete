@@ -1,0 +1,59 @@
+<head>
+  <title>Return Item</title>
+</head>
+
+<%- include('../partials/header'); -%>
+
+<datalist id="phone" >
+  <% for(var i = 0; i<phones.length; i++) {%>
+    
+    <option value = <%= phones[i] %> >
+  <% } %>
+</datalist>
+
+<form action="">
+  <h2>Return tool</h2>
+  <label for="phone">Select a phone number</label>
+  <input class="classic" list="phone" name="phone" id="phone_input"/>
+  <button type="button" onclick="getCustomerDetails()">Get details</button>
+</form>
+<br>
+<div style="text-align: center;">
+<img class="result_image" \>
+</div>
+
+<div class="tableData"></div>
+
+<script>
+ 
+ async function getCustomerDetails(){ 
+  const phone = document.querySelector('#phone_input').value
+  const image = document.querySelector('.result_image')
+  // console.log(phone)
+const tableData = document.querySelector('.tableData')
+   var rentals_details = await fetch('/home/rentals/rental_details?phone='+phone,{
+    method:'GET',
+    headers:{'Content-Type': 'application/json'},
+  })
+  var picture_url = ''
+  var data = await rentals_details.json()
+  // console.log(data)
+  var tem = '<br/><table id = "customers"><tr><th>Tool</th><th>Date</th><th>Customer name</th></tr>'
+      //   document.write('')
+
+      for(let i = 0;i<data.length;i++){
+        if(data[i].photo_url != '')
+          picture_url = data[i].photo_url
+        const time = new Date(data[i].date).toLocaleString('en-IN')
+        // const time = getFormettedDate(data[i].time)
+        tem+=('<tr><td>'+data[i].tool+'</td><td>'+time+'</td><td>'+data[i].customer_name+'</td></tr>')
+      }
+      tem+='</table><br><br>'
+      image.src = picture_url
+      tableData.innerHTML = tem;
+
+  // console.log(rentals_details)
+ }
+</script>
+
+<%- include('../partials/footer') -%>
