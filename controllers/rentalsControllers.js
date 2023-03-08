@@ -1,25 +1,25 @@
 
 const {alert} = require('node-popup')
 const AWS = require('aws-sdk')
-
+require('dotenv').config();
 const fetch = require("node-fetch");
 const Tool = require("../models/Tool");
 const Tool_transection = require("../models/Tool_transection");
-// AWS.config.loadFromPath('./s3_config.json');
+
 
 AWS.config.update({
   region: 'ap-south-1',
   credentials:{
-  "accessKeyId": 'AKIARFBEPGQDYFL6MGVL',
-  "secretAccessKey": '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',
-  "region": 'ap-south-1',
+  "accessKeyId": process.env.ACCESS_KEY,
+  "secretAccessKey": process.env.SECRET_ACCESS_KEY,
+  "region": process.env.BUCKET_REGION,
    }
   })
+  // console.log('Access key is: ', process.env.ACCESS_KEY)
+// console.log('Access key is: ', process.env.ACCESS_KEY)
 
-  // var s3 = new AWS.S3({apiVersion: '2006-03-01', region: process.env.BUCKET_REGION});
 
-
-  var s3 = new AWS.S3( { params: {Bucket: process.env.BUCKET_NAME} } );
+//   var s3 = new AWS.S3( { params: {Bucket: process.env.BUCKET_NAME} } );
 
 
 
@@ -67,13 +67,22 @@ module.exports.rent_issue_post = async(req, res)=>{
   if(req.body.pic_url != '' && !checkCustomer(req.body.phone)){
   const s3 = new AWS.S3();
   const buffer = Buffer.from(req.body.pic_url.split(",")[1], 'base64');
+  // AWS.config.update({
+  //   region: 'ap-south-1',
+  //   credentials:{
+  //   "accessKeyId": process.env.ACCESS_KEY,
+  //   "secretAccessKey": process.env.SECRET_ACCESS_KEY,
+  //   "region": process.env.BUCKET_REGION,
+  //    }
+  // })
+
   const params = {
     Bucket: process.env.BUCKET_NAME,
     Key: req.body.phone+'.jpeg', 
     Body: buffer,
     // ContentType: req.files.file.mimetype
   };
-
+  
 
 
   s3.upload(params, (err, data)=>{
@@ -130,9 +139,44 @@ const checkCustomer = (phone)=>{
 }
 
 
-module.exports.rental_details_get = (req, res)=>{
+module.exports.rental_details_get = async (req, res)=>{
   const phone = req.query.phone
-  Tool_transection.find({phone}).then(transections=>res.send(transections)).catch(err=>res.send(err))
+  const tools = await Tool.find({})
+  var dict = {}
+  tools.forEach(tool=>dict[tool.tool] = tool.default_rent)
+  var response = {}
+  var result = new Array()
+  Tool_transection.find({phone}).then(transections=>{
+    // console.log(transections)
+    
+    for(var i=0;i<transections.length;i++){
+      const diffTime = new Date()-transections[i].date;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      result.push({...transections[i]._doc,
+        default_rent : dict[transections[i].tool],
+        total_days : diffDays,
+        total_rent : diffDays*dict[transections[i].tool]
+      })
+      // console.log(transections[i])
+    }
+    
+
+    // transections.forEach(transection=>{
+    //   const diffTime = new Date()-transection.date;
+    //   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      
+    //   response = {
+    //     ...transection
+    //   }
+    //   // response[default_rent] = dict[transection.tool];
+    //   // response[number_of_days] = diffDays;
+    //   // response[total_rent]= diffDays*dict[transection.tool]
+    //   // console.log(response)
+
+    //   result.add(response._doc)
+    // })
+    
+    res.send(result)}).catch(err=>res.send(err))
   
   
 }
