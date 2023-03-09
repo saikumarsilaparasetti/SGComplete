@@ -10,7 +10,9 @@
   </head>
   <body>
     <nav>
+      
       <h1><a href="/">SG Complete</a></h1>
+      
       <ul>
         <% if(user){ %>
         <li>Welcome, <%= user.email %></li>
@@ -37,6 +39,7 @@
 
 <script>
   const curr_path = window.location.pathname;
+  
   const div_curr_path = document.querySelector('.curr_path')
   let path_array = curr_path.split('/')
   path_array = path_array.slice(1, path_array.length-1)

@@ -69,8 +69,11 @@
     let address = document.querySelector('#address').value
     let tool = document.querySelector('#tool').value
     const tools =  JSON.parse( '<%- JSON.stringify(tools) %>')
-    console.log(tools)
+    // console.log(tools)
+    const tool_id = tools[tool]._id
     tool = tools[tool].tool
+    
+    
     let remarks = document.querySelector('#remarks').value
     let date = document.querySelector('#date').value
     let success = document.querySelector('.success')
@@ -79,7 +82,7 @@
     await fetch('/rentals/rent_issue',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({customer_name, phone,date, address, tool,pic_url:image_data_url, remarks})
+      body:JSON.stringify({customer_name, phone,date, address,tool_id, tool,pic_url:image_data_url, remarks})
     }).then(res=>res.json()).then(res=>{success.textContent='Transection successful!\nId: '+res._id;
       form.reset()
       dateReset();

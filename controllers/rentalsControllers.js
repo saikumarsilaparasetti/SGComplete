@@ -36,7 +36,7 @@ module.exports.issue_get = async (req, res) => {
   res.render("rentals/issue_rent", { tools: tools });
 };
 module.exports.return_item_get = async (req, res) => {
-  const transections = await Tool_transection.find({})
+  const transections = await Tool_transection.find({returned:false})
   let phones_set = new Set();
   transections.forEach(transection=>phones_set.add(transection.phone))
   phones_set = Array.from(phones_set)
@@ -96,8 +96,11 @@ module.exports.rent_issue_post = async(req, res)=>{
       address: req.body.address,
        date:req.body.date,
        photo_url:data.Location,
-       remarks:req.body.remarks
-     }).then(tool_trans=>res.send(tool_trans)).catch(err=>{res.send({'error': 'Error in transection:'+err.message})})  
+       remarks:req.body.remarks,
+       tool_id:req.body.tool_id
+     }).then(tool_trans=>{
+      Tool.findOneAndUpdate({_id: req.body.tool_id}, {available:false}).then(tool=>res.send(tool_trans)).catch(err=>res.send({"error":err.message}))
+      }).catch(err=>{res.send({'error': 'Error in transection:'+err.message})})  
   } )
     
   
@@ -119,8 +122,13 @@ Tool_transection.create({customer_name: req.body.customer_name,
   address: req.body.address,
    date:req.body.date,
    photo_url:'',
-   remarks:req.body.remarks
- }).then(tool_trans=>res.send(tool_trans)).catch(err=>{res.send({'error': 'Error in transection:'+err.message})})  
+   remarks:req.body.remarks,
+   tool_id:req.body.tool_id
+ }).then(tool_trans=>{
+  Tool.findOneAndUpdate({_id: req.body.tool_id}, {available:false})
+  .then(tool=>res.send(tool_trans))
+  .catch(err=>res.send({"error":err.message}))
+}).catch(err=>{res.send({'error': 'Error in transection:'+err.message})}) 
 
 }
 }
@@ -179,4 +187,20 @@ module.exports.rental_details_get = async (req, res)=>{
     res.send(result)}).catch(err=>res.send(err))
   
   
+}
+
+
+
+module.exports.return_item_post = async (req, res)=>{
+  const transection_id = req.body.transection_id;
+  try{
+    console.log(transection_id)
+    var tool_trans = await Tool_transection.findOne({_id:transection_id})
+    console.log(tool_trans)
+    const tool = await Tool.findOneAndUpdate({_id:tool_trans.tool_id},{available:true})
+    tool_trans = await Tool_transection.findOneAndUpdate({_id:transection_id}, {returned: true})
+    res.send(tool_trans)
+  }catch(err){
+    res.send( {"error":err.message})
+  }
 }
