@@ -17,14 +17,14 @@ const customerSchema = new mongoose.Schema({
   remarks:{
     type: String
   },
-  balance: {
-    type: Number,
-    default: 0.0,
-  },
-  lastUpdated: {
-    type: Date,
-    default: Date.now,
-  },
+  // balance: {
+  //   type: Number,
+  //   default: 0.0,
+  // },
+  // lastUpdated: {
+  //   type: Date,
+  //   default: Date.now,
+  // },
 });
 
 const Customer = mongoose.model("customer", customerSchema);

@@ -7,18 +7,15 @@
 
 
 <form >
-    <a href="/home/accounts"
-    ><p><i class="arrow left"></i></p>
-  </a>
-  <br />
+
     <h2>Pay debit</h2>
   <label for="phones">Select the customer</label>
-  <input class="classic" list="phone" name="phone" id="phone_selected" onchange="update_customer_name_and_balance()"/>
+  <input class="classic" list="phone" name="phone" id="phone_selected" onchange="update_customer_name_and_balance()" required/>
 
   <div class="cust_name"></div>
 
   <label for="phones">Amount to pay</label>
-  <input class="classic" type="number" name="amount_pay" id="amount_pay"/>
+  <input class="classic" type="number" name="amount_pay" id="amount_pay" required/>
   
   <label for="date">Date</label>
   <input class="classic" type="datetime-local" id="date" name="date">
@@ -53,9 +50,9 @@
         const date_time = document.querySelector('#date').value
         const remarks = document.querySelector('#remarks').value
         try{
-            let payment = await fetch("/accounts/payment",{
+            let payment = await fetch("/debit_issue",{
                 method:'POST',
-                body: JSON.stringify( {phone, amount_paid,date_time, remarks}),
+                body: JSON.stringify( {phone, debit:amount_paid,date:date_time,credit:0, remarks}),
                 headers:{'Content-Type' : 'application/json'}
             })
             payment = await payment.json()

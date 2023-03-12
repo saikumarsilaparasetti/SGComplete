@@ -72,6 +72,9 @@ nav li a {
   background: #e7ce41;
 }
 
+button:hover{
+  background: #fbdb5a;
+}
 button.main:hover {
   /* border-radius: 36px; */
   background: #fbdb5a;
@@ -128,6 +131,12 @@ button.main {
   width: 100%;
   padding: 10px 16px 10px;
   letter-spacing: 2px;
+}
+.no_tools {
+  color: #ff0099;
+  margin: 10px 2px;
+  font-size: 0.8em;
+  font-weight: bold;
 }
 .error {
   color: #ff0099;

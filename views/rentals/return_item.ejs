@@ -111,6 +111,8 @@ if(data.error){
   error.innerHTML = data.error
 }else{
   success.innerHTML = "Transection updated successfully"
+  setTimeout(location.reload(), 5000)
+  
 }
   modal.style.display = "none";
   console.log("return tool okay")

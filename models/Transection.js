@@ -5,16 +5,22 @@ const transectionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  item_name: {
-    type: String,
+
+  debit: {
+    type: Number,
+    default:0
   },
-  amount: {
-    type: mongoose.Types.Decimal128,
-    required: true,
+  credit:{
+    type:Number,
+    default:0
   },
   time: {
     type: Date,
     default: Date.now,
+  },
+  balance:{
+    type:Number,
+    required:true
   },
   remarks: {
     type: String,

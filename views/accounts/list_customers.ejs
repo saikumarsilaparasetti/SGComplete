@@ -22,8 +22,8 @@
       <th>Name</th>
       <th>Address</th>
       <th>Phone</th>
-      <th>Last updated</th>
-      <th>Balance</th>
+      <!-- <th>Last updated</th>
+      <th>Balance</th> -->
     </tr>
     
   <% for(let i = 0;i<customers.length;i++){ %>
@@ -33,9 +33,7 @@
     <td><%= customers[i]['name'] %></td>
     <td><%= customers[i]['address'] %></td>
     <td class="phone" > <%= customers[i]['phone'] %></td>
-    <td><%= customers[i]['lastUpdated'].toLocaleString() %></td>
-    <td><%= customers[i]['balance'] %></td>
-  
+      
   </tr>
 
 

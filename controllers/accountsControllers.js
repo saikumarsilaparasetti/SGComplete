@@ -22,21 +22,33 @@ module.exports.debit_issue_get = async (req, res) => {
 
 module.exports.debit_issue_post = async (req, res) => {
   //   console.log(req.body);
-  const { phone, item_name, amount, date, remarks } = req.body;
+  const { phone, item_name, credit,debit, date, remarks } = req.body;
+  // console.log(req.body)
+  const last_transection = await Transection.find().sort({$natural:-1}).limit(1)
+  var last_transection_balance = 0;
+  if(last_transection.length == 0)
+    last_transection_balance = 0;
+  else
+    last_transection_balance = last_transection[0].balance
+  
+  // console.log(last_transection)
+
 
   try {
     const new_transection = await Transection.create({
       phone,
       item_name,
-      amount,
+      credit,
+      debit,
       date,
       remarks,
+      balance: parseInt(credit)>0?parseInt(credit)+parseInt(last_transection_balance):parseInt(last_transection_balance) - parseInt(debit)
     });
-    let cust = await Customer.find({ phone: phone });
-    console.log(cust);
-    let new_bal =  parseFloat(cust[0].balance)+ parseFloat(amount);
-    console.log(new_bal);
-    await Customer.findOneAndUpdate({ phone: phone }, { balance: new_bal, lastUpdated : date });
+    // let cust = await Customer.find({ phone: phone });
+    // console.log(cust);
+    // let new_bal =  parseFloat(cust[0].balance)+ parseFloat(amount);
+    // console.log(new_bal);
+    // await Customer.findOneAndUpdate({ phone: phone }, { balance: new_bal, lastUpdated : date });
     res.send(new_transection);
   } catch (err) {
     res.status(400).send({ error: err.message });
@@ -57,8 +69,9 @@ module.exports.check_account_get = async (req, res) => {
 module.exports.customer_get = async (req, res) => {
   try {
     const customer = await Customer.find({ phone: req.query.phone });
-
-    res.render("accounts/customer", { customer: customer });
+    const last_transection = await Transection.find().sort({$natural:-1}).limit(1)
+    // console.log({ customer:{...customer[0]._doc, lastUpdated: last_transection[0].time, balance: last_transection[0].balance}})
+    res.render("accounts/customer",  { customer:new Array({...customer[0]._doc, lastUpdated: last_transection[0].time, balance: last_transection[0].balance})} );
   } catch (err) {
     res.send(400).send(err);
   }
@@ -71,6 +84,12 @@ module.exports.create_account_get = (req, res) => {
 module.exports.create_account_post = async (req, res) => {
   const { name, address, phone } = req.body;
   try {
+    const check_customer = await Customer.find({phone})
+    // console.log(check_customer)
+    if(check_customer.length!=0){
+      res.send({'error':'Customer already registered with name :'+check_customer.name})
+      return
+    }    
     const customer = await Customer.create({ name, address, phone });
     res.send(customer);
   } catch (err) {
@@ -83,7 +102,7 @@ module.exports.transections_get = async (req, res) => {
     const transections = await Transection.find({ phone: req.query.phone });
     res.send(transections);
   } catch (err) {
-    res.status(400).send(err);
+    res.status(400).send({'error':err.message});
   }
 };
 // module.exports.get_customers = async (req, res) => {

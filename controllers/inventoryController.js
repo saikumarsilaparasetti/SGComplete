@@ -13,7 +13,7 @@ module.exports.inventory_post = async (req, res) => {
     
     let { item_name, quantity_at_SGE, quantity_at_SGG } = req.body;
     // console.log(item_name, quantity_at_SGE, quantity_at_SGG)
-    item_name = item_name.replace(' ', '_')
+    item_name = item_name.replace(/ /g, '_')
     
     const inventory = await Inventory.findOneAndUpdate ({item_name:item_name},{
       item_name: item_name,

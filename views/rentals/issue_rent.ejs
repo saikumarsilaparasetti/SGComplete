@@ -13,21 +13,25 @@
       <h2>New Issue</h2>
 
       <label for="name"><h3>Customer name</h3></label>
-      <input type="text" name="name" id="name">
+      <input type="text" name="name" id="name" required>
 
       <label for="phone" ><h3> Phone</h3></label>
-      <input type="text" name="phone" id="phone">
+      <input type="text" name="phone" id="phone" required>
 
       <label for="address"><h3> Address</h3></label>
-      <input type="text" name="address" id="address">
+      <input type="text" name="address" id="address" required>
 
       <label for=""><h3> Select machine</h3></label>
-      <select class="classic" id="tool">
+      <select class="classic" id="tool" required>
         <% for(var i = 0; i<tools.length; i++) {%> 
           <option value=<%= i%>><%= tools[i].tool %></option>  
 
           <% } %>
       </select>
+      <% if(tools.length == 0) {%>
+      <div class="no_tools">No tools available for rent </div>
+
+      <%  }%>
       <br>
       <label for="click"> <h3>Capture customer picture</h3> </label>
 <button id="start-camera" name="click" type="button" onclick="onCamera()" >Start Camera</button>
