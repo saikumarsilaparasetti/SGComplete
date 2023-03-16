@@ -40,8 +40,14 @@ module.exports.return_item_get = async (req, res) => {
   let phones_set = new Set();
   transections.forEach(transection=>phones_set.add(transection.phone))
   phones_set = Array.from(phones_set)
-  
-  res.render("rentals/return_item", {phones: phones_set});
+  if(req.query.phone != ''){
+    console.log(req.query.phone)
+    res.render("rentals/return_item", {phones: phones_set, phone:req.query.phone});
+  }
+  else{
+    res.render("rentals/return_item", {phones: phones_set});
+  }
+
 };
 
 module.exports.register_tool_get = (req, res)=>{
@@ -115,13 +121,14 @@ module.exports.rent_issue_post = async(req, res)=>{
 //     res.send("File is loaded at :"+data.Location)
 // });
 }else{
-
+var url= ((await Tool_transection.find({phone:req.body.phone, photo_url:{$ne:null}}))[0]).photo_url
+// console.log(url)
 Tool_transection.create({customer_name: req.body.customer_name,
   tool: req.body.tool,
   phone: req.body.phone,
   address: req.body.address,
    date:req.body.date,
-   photo_url:'',
+   photo_url:url,
    remarks:req.body.remarks,
    tool_id:req.body.tool_id
  }).then(tool_trans=>{
@@ -154,7 +161,7 @@ module.exports.rental_details_get = async (req, res)=>{
   tools.forEach(tool=>dict[tool.tool] = tool.default_rent)
   var response = {}
   var result = new Array()
-  Tool_transection.find({phone}).then(transections=>{
+  Tool_transection.find({phone, returned:false}).then(transections=>{
     // console.log(transections)
     
     for(var i=0;i<transections.length;i++){
@@ -167,6 +174,7 @@ module.exports.rental_details_get = async (req, res)=>{
       })
       // console.log(transections[i])
     }
+    
     
 
     // transections.forEach(transection=>{
@@ -202,5 +210,15 @@ module.exports.return_item_post = async (req, res)=>{
     res.send(tool_trans)
   }catch(err){
     res.send( {"error":err.message})
+  }
+}
+
+module.exports.transections_get = async (req, res)=>{
+  try{
+    const transections = await Tool_transection.find({returned:false})
+    console.log(transections)
+    res.render('rentals/active_transections', {transections})
+  }catch(err){
+    res.send({error:err})
   }
 }

@@ -19,4 +19,7 @@ router.post('/rentals/rent_issue', (req,res)=>rentalsControllers.rent_issue_post
 
 router.get('/home/rentals/rental_details', (req, res)=>rentalsControllers.rental_details_get(req, res))
 router.post('/rentals/return_item', (req, res)=>rentalsControllers.return_item_post(req, res))
+
+router.get('/home/rentals/active_transections', (req, res)=>rentalsControllers.transections_get(req, res))
+
 module.exports = router;

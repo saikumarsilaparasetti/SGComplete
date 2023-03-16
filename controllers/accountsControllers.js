@@ -69,11 +69,29 @@ module.exports.check_account_get = async (req, res) => {
 module.exports.customer_get = async (req, res) => {
   try {
     const customer = await Customer.find({ phone: req.query.phone });
-    const last_transection = await Transection.find().sort({$natural:-1}).limit(1)
+    if(customer.length == 0){
+      // res.send({error:'Customer not found with given contact'})
+      res.render('error', {error:'Customer not found with given contact'})
+      return
+    }
+    var last_transection = await Transection.find({ phone: req.query.phone }).sort({$natural:-1}).limit(1)
+    
+    var lastUpdated;
+    var balance
+    if(last_transection.length == 0){
+      console.log(customer)
+      lastUpdated = customer[0].account_creation_date
+      balance = 0
+    }
+    else{
+      lastUpdated= last_transection[0].time
+      balance = last_transection[0].balance
+    }
+    // console.log("Last transection is: "+last_transection.length)
     // console.log({ customer:{...customer[0]._doc, lastUpdated: last_transection[0].time, balance: last_transection[0].balance}})
-    res.render("accounts/customer",  { customer:new Array({...customer[0]._doc, lastUpdated: last_transection[0].time, balance: last_transection[0].balance})} );
+    res.render("accounts/customer",  { customer:new Array({...customer[0]._doc, lastUpdated:lastUpdated , balance:balance})} );
   } catch (err) {
-    res.send(400).send(err);
+    res.send({"error": err});
   }
 };
 
@@ -158,4 +176,9 @@ module.exports.payment_post = async (req, res)=>{
     res.send(err)
   }
 
+}
+
+
+module.exports.error_get = (req, res)=>{
+  res.render('error', {error: req.error})
 }

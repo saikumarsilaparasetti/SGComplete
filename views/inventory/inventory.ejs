@@ -29,9 +29,9 @@
   function addInventory() {
       const result = document.querySelector('.result');
       
-      let result_html = `<form class='update_inventory' ><br><h2>Add/Update Inventory</h2><br><h3>Select an item</h3>
+      let result_html = `<br><div style="background-color: rgb(252, 249, 233, 0.4);border-radius: 20px 50px;"> <form class='update_inventory' ><h2>Add/Update Inventory</h2><br><h3>Select an item</h3>
       <input class="classic" list="inventory" onchange='update_click(this)' id='inventory_input' name="Inventory" required/>
-  <br><br><h3>Quantity at SGG</h3>
+  <br><br><h3><span>Quantity at SGG</span></h3>
   <input type = "number" id='sgg_quant' >
   <br><br><h3>Quantity at SGE</h3>
   <input type = "number" id='sge_quant'>
@@ -39,10 +39,8 @@
   <button type='button' onclick='submit_update()'>Update</button>
   <div style="font-size:20px" class='success'/>
   <div style="font-size:20px" class='error'/>
-  <br>
-  <br>
-  
   </form>
+  </div>
   <br>
   <br>
   

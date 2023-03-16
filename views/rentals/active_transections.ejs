@@ -1,0 +1,14 @@
+<%- include('../partials/header'); -%>
+
+
+<body>
+    <table id="customers">
+        <tr><th>Tool</th><th>Date</th><th>Customer Name</th><th>Phone</th><th>remarks</th></tr>
+    <% for(var i = 0;i<transections.length;i++){ %>
+        <tr onclick="window.location='/home/rentals/return_item?phone=<%= transections[i].phone%>'"><td><%= transections[i].tool %></td><td><%=transections[i].date.toLocaleString() %> </td><td><%= transections[i].customer_name%></td><td><%= transections[i].phone%></td><td><%=transections[i].remarks %></td></tr>
+    <% } %>
+    </table>
+
+</body>
+
+<%- include('../partials/footer'); -%>

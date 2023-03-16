@@ -42,6 +42,8 @@ router.get('/home/accounts/debit_pay', requireAuth, (req, res)=>accountsConatrol
 
 router.post('/accounts/payment', requireAuth, (req, res)=> accountsConatroller.payment_post(req, res));
 
+router.get('/error', requireAuth, (req, res)=>accountsConatroller.error_get(req, res))
+
 module.exports = router;
 
 

@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 //database connection
-mongoose.connect(process.env.DB);
+mongoose.connect(process.env.DB_MONGO_CLOUD,{ useNewUrlParser: true ,useUnifiedTopology: true});
 mongoose.connection.on("connected", () => {
   console.log("App is connected to database");
 });

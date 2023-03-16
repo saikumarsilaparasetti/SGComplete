@@ -4,6 +4,9 @@
 
 <%- include('../partials/header'); -%>
 
+
+
+
 <datalist id="phone" >
   <% for(var i = 0; i<phones.length; i++) {%>
     
@@ -48,6 +51,8 @@
 <script>
  var data;
  async function getCustomerDetails(){ 
+  const phones = '<% phones %>'
+  console.log(phones)
   const phone = document.querySelector('#phone_input').value
   const image = document.querySelector('.result_image')
   // console.log(phone)
@@ -149,3 +154,13 @@ function return_tool_cancel(){
   
 
 <%- include('../partials/footer') -%>
+
+<% if(phone!=''){ %>
+  <script>
+  console.log('<%= phone %>')
+  const phone_input = document.querySelector('#phone_input')
+  phone_input.value = '<%= phone %>'
+  getCustomerDetails();
+
+</script>
+  <% }%>

@@ -21,7 +21,10 @@ const customerSchema = new mongoose.Schema({
   //   type: Number,
   //   default: 0.0,
   // },
-  // lastUpdated: {
+  account_creation_date: {
+    type:Date,
+    default: new Date()
+  }
   //   type: Date,
   //   default: Date.now,
   // },
