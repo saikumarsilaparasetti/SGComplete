@@ -1,8 +1,22 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+  .spinner_center{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(0, -50%);
+    color: #444;
+    text-align: center;
+  }
+
+</style>
+
 <head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <title>Create account</title>
 </head>
 <%- include('../partials/header') -%>
-
+<div class="total_body">
 <form action="">
   <a href="/home/accounts"
     ><p><i class="arrow left"></i></p>
@@ -26,12 +40,12 @@
   <div class="error"></div>
   <div class="success"></div>
 </form>
-
+</div>
 <script>
   const form = document.querySelector("form");
   const error = document.querySelector(".error");
   const success = document.querySelector(".success");
-
+  const totalBody =document.querySelector('.total_body')
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     error.textContent = "";
@@ -40,7 +54,7 @@
     const address = form.address.value;
     const phone = form.phone.value;
     const remarks = form.remarks.value;
-
+totalBody.innerHTML = '<div class = "spinner_center"> <i class="fa fa-circle-o-notch fa-spin" style="font-size:250px"></i></div>'
     try {
       const res = await fetch("/create_account", {
         method: "POST",
@@ -54,9 +68,17 @@
 
       if (data._id) {
         form.reset();
-        success.textContent = "Customer created successfully!!";
+        // totalBody.innerHTML = '<div class="success"><h2>Account is created successfully!!</h2></div>'
+        alert('Account created successfully!!')
+        // success.textContent = "Customer created successfully!!";
+        location.assign('/home/accounts')
+      }else{
+        location.assign('/error')
       }
     } catch (err) {
+      alert('Error in account creation: '+err)
+        // success.textContent = "Customer created successfully!!";
+      location.assign('/home/accounts')
       console.log(err);
     }
   });

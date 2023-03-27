@@ -406,3 +406,13 @@ input.classic:focus {
   height:100%;
   overflow:hidden;
 }
+
+
+.spinner_center{
+  position: absolute;
+top: 50%;
+left: 40%;
+transform: translate(0, -50%);
+color: #444;
+text-align: center;
+}
