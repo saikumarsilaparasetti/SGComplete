@@ -13,6 +13,7 @@
   <input class="classic" list="phone" name="phone" id="phone_selected" onchange="update_customer_name_and_balance()" required/>
 
   <div class="cust_name"></div>
+  <div class="old_bal"></div>
 
   <label for="phones">Amount to pay</label>
   <input class="classic" type="number" name="amount_pay" id="amount_pay" required/>
@@ -43,6 +44,7 @@
     const error = document.querySelector('.error')
     const success = document.querySelector('.success')
     const cust_name = document.querySelector('.cust_name')
+    const old_bal = document.querySelector('.old_bal')
     form.addEventListener('submit', async (e)=>{
         e.preventDefault()
         const phone = document.querySelector('#phone_selected').value
@@ -81,9 +83,14 @@
     // console.log(cust_name.value)
     let customers = '<%- JSON.stringify( customers)%>'
     customers = JSON.parse(customers)
+    let name = ''
+    let balance = 0
     customers.forEach(element => {
-      if(phone.value===element.phone)
-        cust_name.innerHTML = 'Customer name: '+element.name
+      if(phone.value===element.phone){
+        name = element.name
+        balance = element.balance || 0
+        cust_name.innerHTML = 'Customer name : <span class=\'balance\'>'+name+'</span>'
+        old_bal.innerHTML = 'Balance : <span class=\'balance\'>₹'+balance+'</span>'}
     });
   }
 

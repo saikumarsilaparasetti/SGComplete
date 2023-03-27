@@ -64,6 +64,7 @@ const tableData = document.querySelector('.tableData')
   var picture_url = ''
   data = await rentals_details.json()
   // console.log(data)
+  if(data.length>0)
   var tem = '<br/><table id = "customers"><tr><th>Customer name</th><th>Tool</th><th>Date</th><th>Rent per day</th><th>Total days</th><th>Total rent</th></tr>'
       //   document.write('')
 
@@ -74,6 +75,7 @@ const tableData = document.querySelector('.tableData')
         // const time = getFormettedDate(data[i].time)
         tem+=('<tr onclick="clearRecord(\''+data[i]._id+'\')"><td>'+data[i].customer_name+'</td><td>'+data[i].tool+'</td><td>'+time+'</td><td>'+data[i].default_rent+'</td><td>'+data[i].total_days+'</td><td>'+data[i].total_rent+'</td></tr>')
       }
+      if(data.length>0)
       tem+='</table><br><br>'
       image.src = picture_url
       tableData.innerHTML = tem;

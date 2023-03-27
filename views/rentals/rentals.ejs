@@ -23,11 +23,30 @@
 <form>
   <h2>Rentals</h2>
 
-  <button class="main"><a href="/home/rentals/issue">Rent Tool</a></button>
-  <button class="main"><a href="/home/rentals/return_item">Return Tool</a></button>
-  <button class="main"><a href="/home/rentals/register_tool">Register tool</a></button>
-  <button class="main"><a href="/home/rentals/active_transections">Active transactions</a></button>
-  
+  <button class="main" type="button" onclick="issueRent()">Rent Tool</button>
+  <button class="main" type="button" onclick="returnTool()">Return Tool</button>
+  <button class="main" type="button" onclick="registerTool()">
+    Register tool
+  </button>
+  <button class="main" type="button" onclick="activeTransections()">
+    Active transactions
+  </button>
 </form>
 
+<script>
+  const issueRent = () => {
+    location.assign("/home/rentals/issue");
+  };
+
+  const returnTool = () => {
+    location.assign("/home/rentals/return_item");
+  };
+  const registerTool = () => {
+    location.assign("/home/rentals/register_tool");
+  };
+
+  const activeTransections = () => {
+    location.assign("/home/rentals/active_transections");
+  };
+</script>
 <%- include('../partials/footer') -%>

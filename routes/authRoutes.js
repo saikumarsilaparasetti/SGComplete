@@ -15,4 +15,8 @@ router.get("/xyz", (req, res) => {
   console.log(req);
   res.render("accounts/xyz", req);
 });
+
+router.get("/spinner", (req, res) => {
+  res.render("spinner");
+});
 module.exports = router;

@@ -11,14 +11,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
   </head>
+  <script>
+    const goToCheckAccount = () => {
+      location.assign("/home/accounts/check_account");
+    };
+
+    const listCustomers = () => {
+      location.assign("/home/accounts/customers");
+    };
+
+    const issueCredit = () => {
+      location.assign("/home/accounts/debit_issue");
+    };
+
+    const payDebit = () => {
+      location.assign("/home/accounts/debit_pay");
+    };
+
+    const createCustomer = () => {
+      location.assign("/home/accounts/create_account");
+    };
+  </script>
   <body>
+    <!-- <a href="/home/accounts/check_account">Check Account</a> -->
     <form action="">
       <h2>Accounts</h2>
-      <button class="main"><a href="/home/accounts/check_account">Check Account</a></button>
-      <button class="main"><a href="/home/accounts/customers">List Customers</a></button>
-      <button class="main"><a href="/home/accounts/debit_issue">Issue Credit</a></button>
-      <button class="main"><a href="/home/accounts/debit_pay">Pay Debit</a></button>
-      <button class="main"><a href="/home/accounts/create_account">Create customer</a></button>
+      <button type="button" class="main" onclick="goToCheckAccount()">
+        Check account
+      </button>
+
+      <button class="main" type="button" onclick="listCustomers()">
+        List Customers
+      </button>
+      <button class="main" type="button" onclick="issueCredit()">
+        Issue Credit
+      </button>
+      <button class="main" type="button" onclick="payDebit()">Pay Debit</button>
+      <button class="main" type="button" onclick="createCustomer()">
+        Create Customer
+      </button>
     </form>
   </body>
 </html>
