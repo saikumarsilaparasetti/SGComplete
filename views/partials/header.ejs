@@ -1,18 +1,17 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
-
     <link rel="stylesheet" href="/styles.css" />
-    <link rel="icon" type="image/x-icon" href="../../favicon.ico">    
+    <link rel="icon" type="image/x-icon" href="../../favicon.ico" />
 
     <title>Document</title>
   </head>
   <body>
     <nav>
-      
-      <h1><a href="/">SG Complete<span style="font-size: 10px;">β</span></a></h1>
-      
+      <h1>
+        <a href="/">SG Complete<span style="font-size: 10px">β</span></a>
+      </h1>
+
       <ul>
         <% if(user){ %>
         <li>Welcome, <%= user.email %></li>
@@ -23,35 +22,34 @@
         <li><a href="/login">Login</a></li>
         <li><a href="/signup" class="btn">Sign up</a></li>
         <% }%>
-        <li><div id="google_element"></div></li>
+        <!-- <li><div id="google_element"></div></li> -->
       </ul>
-      
     </nav>
-    <div class="curr_path"></div><br>
-
+    <div class="curr_path"></div>
+    <br />
   </body>
-  <script src="http://translate.google.com/translate_a/element.js?cb=loadGoogleTranslate"></script>
+  <!-- <script src="http://translate.google.com/translate_a/element.js?cb=loadGoogleTranslate"></script>
   <script>
     function loadGoogleTranslate(){
       new google.translate.TranslateElement("google_element")
     }
-  </script>
+  </script> -->
 
-<script>
-  const curr_path = window.location.pathname;
-  
-  const div_curr_path = document.querySelector('.curr_path')
-  let path_array = curr_path.split('/')
-  path_array = path_array.slice(1, path_array.length-1)
-  let result = '';
-  let result_html = ''
-  path_array.forEach(element=>{
+  <script>
+    const curr_path = window.location.pathname;
+
+    const div_curr_path = document.querySelector(".curr_path");
+    let path_array = curr_path.split("/");
+    path_array = path_array.slice(1, path_array.length - 1);
+    let result = "";
+    let result_html = "";
+    path_array.forEach((element) => {
       //console.log(element)
-      result+=('/'+element)
+      result += "/" + element;
       // console.log('->'+result+'<-')
-      let tem = '<a class="path_" href="'+result+'">'+element+'</a>>'
-      result_html+= tem
-  })
-  div_curr_path.innerHTML = result_html
-</script>
+      let tem = '<a class="path_" href="' + result + '">' + element + "</a>>";
+      result_html += tem;
+    });
+    div_curr_path.innerHTML = result_html;
+  </script>
 </html>
